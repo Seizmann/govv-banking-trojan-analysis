@@ -1,0 +1,28 @@
+# Never commit actual malware samples
+*.apk
+*.dex
+*.so
+*.bin
+*.exe
+
+# Analysis artifacts (no binaries)
+*.pcap
+*.pcapng
+*.mitm
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor artifacts
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

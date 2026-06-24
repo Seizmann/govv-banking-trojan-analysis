@@ -1,0 +1,111 @@
+# AndroidManifest.xml — Decoded (Stage 1 Outer APK)
+# Package: com.mmv.jnkh.rql7.tc8szt0d
+# Decoded by: androguard 4.1.4
+# Note: Stage 3 (b.apk) manifest is password-encrypted — not decodable statically
+
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    package="com.mmv.jnkh.rql7.tc8szt0d"
+    android:versionCode="460"
+    android:versionName="1.5.4"
+    android:compileSdkVersion="35"
+    android:compileSdkVersionCodename="15"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-sdk
+        android:minSdkVersion="24"
+        android:targetSdkVersion="35" />
+
+    <permission
+        android:name="com.mmv.jnkh.rql7.tc8szt0d.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="android.permission.BIND_VPN_SERVICE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="com.mmv.jnkh.rql7.tc8szt0d.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+
+    <application
+        android:label="GO​​VV"
+        android:icon="@mipmap/ic_launcher"
+        android:name="com.tyshpgid.akqczvkxm.vbz.rbi.oI4lIJOlbjSkXqgwGehsi9Q9r"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:allowBackup="true"
+        android:supportsRtl="true"
+        android:fullBackupContent="@xml/backup_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:networkSecurityConfig="@xml/network_security_config">
+
+        <!-- STAGE 2: Main Activity (from injected payload.dex) -->
+        <activity
+            android:name="com.shell.a.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- STAGE 2: VPN Service — intercepts ALL traffic -->
+        <service
+            android:name="com.shell.a.PpVpn"
+            android:exported="false"
+            android:permission="android.permission.BIND_VPN_SERVICE">
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+        </service>
+
+        <!-- STAGE 2: Monitors b.apk installation result -->
+        <receiver
+            android:name="com.shell.a.InstallResultReceiver"
+            android:exported="false" />
+
+        <!-- LEGITIMATE LIBRARY (used as cover) -->
+        <receiver
+            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+            android:exported="true"
+            android:permission="android.permission.DUMP">
+            <intent-filter>
+                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:authorities="com.mmv.jnkh.rql7.tc8szt0d.fileprovider"
+            android:grantUriPermissions="true" />
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:exported="false"
+            android:authorities="com.mmv.jnkh.rql7.tc8szt0d.androidx-startup" />
+
+    </application>
+
+</manifest>
+
+# ============================================================
+# ANALYSIS NOTES:
+#
+# 1. android:name="com.tyshpgid.akqczvkxm.vbz.rbi.oI4lIJOlbjSkXqgwGehsi9Q9r"
+#    → Obfuscated Application class — runs dropper code at startup
+#    → attachBaseContext() fires before ANY UI is shown
+#
+# 2. com.shell.a.MainActivity — NOT in outer DEX
+#    → Exists only in injected payload.dex (decrypted at runtime)
+#    → Classic indicator of multi-stage dropper
+#
+# 3. com.shell.a.PpVpn — VPN service
+#    → Bytecode confirms: addRoute("0.0.0.0", 0)
+#    → 100% of network traffic intercepted
+#
+# 4. Only 3 external permissions declared
+#    → Intentional evasion of permission-based scanners
+#    → Stage 3 (b.apk) holds all dangerous permissions in encrypted manifest
+# ============================================================

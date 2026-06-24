@@ -1,0 +1,37 @@
+# mitmproxy-log.txt — PLACEHOLDER
+#
+# Dynamic network capture was NOT performed for this analysis.
+# This file is a placeholder indicating what was attempted.
+#
+# REASON: This was a real incident on a victim's device.
+# The device was factory reset before dynamic analysis could be set up.
+# The APK sample was extracted before reset for static analysis only.
+#
+# TO CAPTURE NETWORK TRAFFIC FOR FUTURE SAMPLES:
+#
+# Option 1 — mitmproxy on rooted device:
+#   1. Install mitmproxy cert on rooted device
+#   2. Set HTTP proxy to mitmproxy instance
+#   3. Install malware APK
+#   4. Capture: mitmproxy -w mitmproxy-log.mitm
+#   5. Export: mitmdump -r mitmproxy-log.mitm --flow-detail 3
+#
+# Option 2 — ANY.RUN sandbox:
+#   Submit hash: cee63a18cf8f25fad52a8184fbc3a617618cba3760d55528aa02975cc140d61d
+#   URL: https://app.any.run/
+#
+# Option 3 — Hybrid Analysis:
+#   Submit hash above
+#   URL: https://www.hybrid-analysis.com/
+#
+# Option 4 — Frida dynamic instrumentation:
+#   frida -U -l hook_websocket.js -f com.mmv.jnkh.rql7.tc8szt0d
+#   (hook e0.C() to log WebSocket URL before connection)
+#
+# EXPECTED CAPTURES:
+#   - WebSocket: wss://[UNKNOWN]/yaarsa/private/yarsap_80541.php
+#   - HTTP POST: http://[UNKNOWN]/yaarsa/private/log_error.php
+#   - GET: http://[UNKNOWN]/config.json
+#   - GET: http://checkip.amazonaws.com (victim IP discovery)
+#   - GET: https://icanhazip.com (victim IP discovery)
+#   - GET: https://ifconfig.me/ip (victim IP discovery)

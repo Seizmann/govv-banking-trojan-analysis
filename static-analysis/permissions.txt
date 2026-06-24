@@ -1,0 +1,113 @@
+# Permissions Analysis — GOVV Banking Trojan
+# ============================================================
+# Stage 1 (Outer APK): com.mmv.jnkh.rql7.tc8szt0d
+# Stage 3 (b.apk):     com.d9fe4v4.pmpgv.eai.uszaw (encrypted manifest)
+# ============================================================
+
+## STAGE 1 DECLARED PERMISSIONS (3 external)
+
+CRITICAL:
+  android.permission.BIND_VPN_SERVICE
+  → Allows creation of a VPN tunnel
+  → Used to intercept 100% of device network traffic
+  → addRoute("0.0.0.0", 0) confirmed in bytecode
+  → This is the most dangerous permission in this APK
+
+HIGH:
+  android.permission.REQUEST_INSTALL_PACKAGES
+  → Allows installing APK files without user prompt (after first grant)
+  → Used to silently install b.apk (Stage 3 banking trojan)
+  → Combined with InstallResultReceiver to monitor install
+
+MEDIUM:
+  android.permission.POST_NOTIFICATIONS
+  → Allows posting notifications
+  → Used for deceptive "Installing..." notifications
+
+INTERNAL (self-defined):
+  com.mmv.jnkh.rql7.tc8szt0d.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+  → Custom permission for internal dynamic broadcast receivers
+  → Limits external components from accessing internal broadcasts
+
+
+## STAGE 3 INFERRED PERMISSIONS (from capability analysis)
+## (Cannot read encrypted manifest — inferred from class behavior)
+
+Inferred from bytecode analysis of b_classes.dex:
+
+  android.permission.RECEIVE_BOOT_COMPLETED
+    → BootReceiver class confirmed
+    → Malware survives device restart
+
+  android.permission.BIND_ACCESSIBILITY_SERVICE
+    → dqssgbaajsdc extends AccessibilityService
+    → Keylogger, screen reader, overlay controller
+
+  android.permission.RECEIVE_SMS
+    → content://sms/inbox access confirmed
+    → SMS OTP theft
+
+  android.permission.READ_SMS
+    → Direct SMS database read
+    → "Access SMS Permission is Disabled" response string
+
+  android.permission.SEND_SMS
+    → SendSms class confirmed
+    → Attacker can send SMS from victim's number
+
+  android.permission.READ_CONTACTS
+    → "Access Contacts Permission is Disabled" response string
+
+  android.permission.CAMERA
+    → bmrejrotee service: continuous-video mode
+    → Camera recording without notification
+
+  android.permission.RECORD_AUDIO
+    → Microphone recording service confirmed
+
+  android.permission.ACCESS_FINE_LOCATION
+    → GPS location commands in C2 protocol
+
+  android.permission.READ_CALL_LOG
+    → Call log access and blocking
+
+  android.permission.PROCESS_OUTGOING_CALLS
+    → Call blocking via blker command
+
+  android.permission.SYSTEM_ALERT_WINDOW
+    → Overlay attacks over banking apps
+    → Required for acs_*.html injection
+
+  android.permission.FOREGROUND_SERVICE
+    → Multiple foreground services for persistence
+
+  android.permission.BIND_DEVICE_ADMIN
+    → MyDeviceAdminReceiver confirmed
+    → Prevents uninstall, lock control
+
+  android.permission.WRITE_EXTERNAL_STORAGE
+    → File manager capability confirmed
+
+  android.permission.READ_PHONE_STATE
+    → SIM card, IMEI harvesting (HomeSIM class)
+
+  android.permission.REQUEST_INSTALL_PACKAGES
+    → Self-update mechanism (update command)
+
+  android.permission.BIND_NOTIFICATION_LISTENER_SERVICE
+    → Rec_Notifications capability confirmed
+
+
+## EVASION STRATEGY
+
+The malware deliberately declares only 3 harmless-looking permissions
+in Stage 1 (outer APK) to:
+  1. Pass automated permission-based app scanners
+  2. Avoid triggering "dangerous permission" warnings during install
+  3. Reduce user suspicion during sideload
+
+All truly dangerous permissions are requested at runtime by Stage 3
+(b.apk), after the VPN is already active and the Accessibility Service
+guide has tricked the user into granting permissions manually.
+
+This is a deliberate, sophisticated evasion of permission-based detection.
