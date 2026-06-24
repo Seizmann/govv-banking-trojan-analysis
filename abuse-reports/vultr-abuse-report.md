@@ -92,7 +92,7 @@ This malware is a sophisticated 3-stage banking trojan with the following confir
 
 **5. ANY.RUN Analysis Report**
 
-Task URL: https://app.any.run/tasks/b30ccc1a-83bd-4347-baaa-8b7d7a35452f
+Task URL: https://app.any.run/tasks/c50e0613-6703-4fad-92ff-4be747d4d0a9
 
 ---
 
