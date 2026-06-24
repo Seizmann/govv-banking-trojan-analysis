@@ -158,7 +158,7 @@ This incident has been reported to:
 - [x] Bangladesh Bank Cybersecurity Cell
 - [x] CERT-BD (BGD e-GOV CIRT)
 - [x] VirusTotal (hashes submitted)
-- [ ] Facebook (ad reported)
+- [x] Facebook (ad reported)
 
 ---
 
