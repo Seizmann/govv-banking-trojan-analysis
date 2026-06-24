@@ -154,7 +154,7 @@ def decrypt_string(ciphertext, key):
 ## 📢 Reporting
 
 This incident has been reported to:
-- [ ] bKash Security Team
+- [x] bKash Security Team
 - [x] Bangladesh Bank Cybersecurity Cell
 - [x] CERT-BD (BGD e-GOV CIRT)
 - [x] VirusTotal (hashes submitted)
