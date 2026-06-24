@@ -248,3 +248,64 @@ Attacker operator panel
 - [ ] Report to BGD e-GOV CIRT with this domain
 - [ ] Report to bKash security team
 - [ ] Submit to VirusTotal as network IOC
+
+---
+
+## 🎯 CONFIRMED C2 SERVER (ANY.RUN Dynamic Analysis)
+
+**Source:** ANY.RUN sandbox — Suricata IDS alert  
+**Date:** 2026-06-24 05:25:21 GMT  
+**Suricata Rule:** SID 84001342; rev: 1  
+**Detection:** "MALWARE [ANY.RUN] Android/Btmob activity observed in HTTP request"  
+
+### C2 Server Details
+
+| Field | Value |
+|-------|-------|
+| **C2 IP** | `65.20.66.209` |
+| **Port** | `80` (HTTP) |
+| **Full URL** | `http://65.20.66.209/yaarsa/private/yarsap_80541.php` |
+| **Method** | HEAD (initial beacon) |
+| **Response** | 200 OK |
+| **Server** | Microsoft-IIS/10.0 (Windows Server) |
+| **Hosting** | Vultr VPS (`65.20.66.209.vultrusercontent.com`) |
+| **Hosting Company** | The Constant Company, LLC (Vultr) |
+| **City** | West Palm Beach, US |
+| **Malware Family** | **Android/Btmob** (Suricata confirmed) |
+
+### HTTP Request (Captured)
+
+```http
+HEAD /yaarsa/private/yarsap_80541.php HTTP/1.1
+Host: 65.20.66.209
+User-Agent: Dalvik/2.1.0 (Linux; U; Android 14; Galaxy_S10 Build/UP1A.231105.001.94835f2d)
+Connection: Keep-Alive
+Accept-Encoding: gzip
+```
+
+### HTTP Response (Captured)
+
+```http
+HTTP/1.1 200 OK
+Content-Length: 0
+Content-Type: text/html; charset=UTF-8
+Server: Microsoft-IIS/10.0
+Date: Wed, 24 Jun 2026 05:25:21 GMT
+```
+
+### Key Observations
+
+1. **Windows IIS Server** — C2 is hosted on Windows, not Linux
+2. **Vultr VPS** — cheap, anonymous VPS hosting (common for malware C2)
+3. **Port 80** — unencrypted initial beacon; WebSocket likely on different port
+4. **HEAD method** — malware checks if C2 is alive before full connection
+5. **Static analysis match** — URL path identical to what bytecode decryption revealed
+6. **Android/Btmob family** — known Android banking trojan family
+
+### Abuse Contacts
+
+| Organization | Contact |
+|-------------|---------|
+| Vultr (hosting) | abuse@constant.com |
+| Phone | +1-973-849-0500 |
+| Vultr Abuse | https://www.vultr.com/legal/aup/ |
