@@ -13,7 +13,7 @@ A sophisticated **3-stage Android banking trojan** distributed via **Facebook Ad
 | **Malware Family** | GOVV / ShellA |
 | **Type** | Dropper → Banking Trojan → RAT |
 | **Distribution** | Facebook Ads ("World Cup Live Free TV") |
-| **Primary Target** | bKash (Bangladesh MFS) |
+| **Primary Target** | bKash (Bangladeshi MFS) |
 | **Secondary Targets** | Nagad, Rocket, mobile banking apps |
 | **Outer Package** | `com.mmv.jnkh.rql7.tc8szt0d` |
 | **Payload Package** | `com.d9fe4v4.pmpgv.eai.uszaw` |
@@ -158,7 +158,7 @@ This incident has been reported to:
 - [x] Bangladesh Bank Cybersecurity Cell
 - [x] CERT-BD (BGD e-GOV CIRT)
 - [x] VirusTotal (hashes submitted)
-- [x] Facebook (ad reported)
+- [ ] Facebook (ad reported)
 
 ---
 
