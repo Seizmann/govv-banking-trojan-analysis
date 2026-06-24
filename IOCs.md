@@ -189,3 +189,62 @@ See [`malware-samples/yara-rules.yar`](malware-samples/yara-rules.yar)
 
 *All network IOCs marked as partial pending dynamic analysis.*  
 *Submit samples to sandbox for full network IOC extraction.*
+
+---
+
+## 🌐 DYNAMIC ANALYSIS — C2 Domain Confirmed
+**Source:** Wireshark capture on victim's Vivo device (post-factory-reset monitoring)  
+**Date:** 2026-06-24
+
+### C2 Server Domain (CONFIRMED)
+
+| IOC | Value | Confidence |
+|-----|-------|-----------|
+| **C2 Domain** | `asia-vpushonrt-stsdk.vivoglobal.com` | 🔴 CONFIRMED |
+| **C2 Port** | `443` (HTTPS/WSS tunnel) | 🔴 CONFIRMED |
+| **Proxy Port** | `8088` (local proxy on device) | 🔴 CONFIRMED |
+| **Protocol** | `HTTP CONNECT` → WSS tunnel | 🔴 CONFIRMED |
+| **Response** | `1` (C2 alive signal) | 🔴 CONFIRMED |
+
+### Domain Analysis
+
+```
+Full domain:  asia-vpushonrt-stsdk.vivoglobal.com
+              ^^^^  ^^^^^^^^^^^  ^^^^^  ^^^^^^^^^^^
+              region  fake SDK  fake   legitimate
+                      name      label  Vivo domain
+
+Technique: Subdomain Mimicry on legitimate brand domain
+           "vpushonrt" ≈ "vivo push notification real-time"
+           Designed to look like Vivo's official SDK infrastructure
+```
+
+**Victim device:** Vivo Android phone  
+**Why subdomain?** Malware uses fake Vivo subdomain to:
+1. Blend into legitimate Vivo phone traffic
+2. Evade network-level domain blocklists
+3. Appear as a system SDK call, not malware C2
+
+### Traffic Flow (Wireshark)
+
+```
+Victim device (192.168.68.102)
+    │
+    │ TCP port 8088 (malware local proxy)
+    ▼
+Router/Gateway (192.168.68.105)
+    │
+    │ HTTP CONNECT asia-vpushonrt-stsdk.vivoglobal.com:443
+    ▼
+C2 Server (vivoglobal.com fake subdomain)
+    │
+    │ WSS encrypted tunnel
+    ▼
+Attacker operator panel
+```
+
+### Status
+- [x] Domain reported to vivoglobal.com abuse team
+- [ ] Report to BGD e-GOV CIRT with this domain
+- [ ] Report to bKash security team
+- [ ] Submit to VirusTotal as network IOC

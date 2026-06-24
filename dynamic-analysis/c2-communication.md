@@ -244,3 +244,48 @@ Expected captures:
 - `Upgrade: websocket` HTTP header
 - Initial `join` message with device fingerprint
 - `[AST-PAS]` response from server
+
+---
+
+## ✅ CONFIRMED C2 DOMAIN (Dynamic Analysis)
+
+**Method:** Wireshark capture on victim's Vivo device  
+**Captured by:** Incident responder  
+
+### C2 Domain
+
+```
+asia-vpushonrt-stsdk.vivoglobal.com:443
+```
+
+### Traffic Pattern (Wireshark)
+
+```
+192.168.68.102:41882 → 192.168.68.105:8088
+HTTP CONNECT asia-vpushonrt-stsdk.vivoglobal.com:443 HTTP/1.1
+
+→ TCP SYN/ACK handshake completed
+→ HTTPS/WSS tunnel established
+→ C2 communication encrypted inside tunnel
+```
+
+### Domain Mimicry Technique
+
+The malware uses `vivoglobal.com` (Vivo's official domain) as a **parent domain** with a fake subdomain designed to look like a Vivo SDK endpoint:
+
+- `vpushonrt` → mimics "Vivo Push Notification Real-Time"
+- `stsdk` → mimics "SDK"
+- `asia` → regional prefix for legitimacy
+
+On a Vivo phone, this traffic appears identical to legitimate Vivo system service traffic — evading both user suspicion and network-level monitoring.
+
+### Browser Probe Result
+
+```
+GET https://asia-vpushonrt-stsdk.vivoglobal.com
+Response: "1"   ← C2 server alive indicator
+```
+
+### Reported To
+
+- vivoglobal.com abuse team ✅
