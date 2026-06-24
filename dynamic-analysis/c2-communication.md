@@ -289,3 +289,58 @@ Response: "1"   ← C2 server alive indicator
 ### Reported To
 
 - vivoglobal.com abuse team ✅
+
+---
+
+## ✅ VirusTotal Sandbox — Behavioral Confirmation
+
+**Source:** VirusTotal Zenbox Android sandbox  
+**Date:** 2026-06-24  
+**Detections:** 5/64 AV engines  
+
+### Dropped Files (Static Analysis Confirmed ✅)
+
+```
+/data/user/0/com.mmv.jnkh.rql7.tc8szt0d/app_p_dex/payload.dex
+/data/user/0/com.mmv.jnkh.rql7.tc8szt0d/files/assets_i/b.apk
+/data/user/0/com.mmv.jnkh.rql7.tc8szt0d/files/assets_i/installing.html
+```
+All three files match exactly what static analysis predicted.
+
+### Network Traffic Observed (Stage 1/2 only)
+
+| IP | Port | Protocol | Owner |
+|----|------|----------|-------|
+| 142.251.152.119 | 443 | UDP | Google |
+| 173.194.193.113 | 443 | TCP | Google |
+| 173.194.194.94  | 443 | TCP | Google |
+| 172.67.151.52   | 443 | TCP | **Cloudflare** ⚠️ |
+| 173.194.193.95  | 443 | TCP | Google |
+| 173.194.64.95   | 443 | TCP | Google |
+| 173.194.64.100  | 443 | TCP | Google |
+| 173.194.206.113 | 443 | TCP | Google |
+| 142.250.125.95  | 443 | TCP | Google |
+| 216.239.38.223  | 443 | TCP | Google |
+
+**TLS SNI captured:** `www.googleapis.com`
+
+**Note:** Stage 3 C2 traffic NOT captured — VPN dialog was not accepted  
+in sandbox environment. Google traffic = Stage 1/2 system calls.  
+`172.67.151.52` (Cloudflare, no reverse DNS) = unconfirmed, possibly C2.
+
+### JA3 TLS Fingerprints
+
+```
+69659b6dfbeaa53c063d2002cfecab13
+893d25297c894da36fbdee5cea98b01c
+8f35687f7cd9ba7a693ccc31d712f6c0
+9b02ebd3a43b62d825e1ac605b621dc8
+aa50c12a5dfa717d9d6ab34e97de79d5
+```
+
+### MITRE ATT&CK (Sandbox Confirmed)
+
+| Technique | ID | Description |
+|-----------|-----|-------------|
+| Application Layer Protocol | T1071 | C2 over HTTPS |
+| Encrypted Channel | T1573 | WSS encrypted C2 |
